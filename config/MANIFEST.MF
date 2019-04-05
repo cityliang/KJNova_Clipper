@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Class-Path: lib/c3p0-0.9.1.2.jar lib/ojdbc14-10.2.0.4.0.jar 
+Main-Class: com.huntto.TbcxApp
