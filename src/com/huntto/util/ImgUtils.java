@@ -7,7 +7,10 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 public class ImgUtils {
@@ -38,6 +41,49 @@ public class ImgUtils {
 		}
 		ImageIO.write(bufferedimage, "JPEG", new File("D:\\BaiduNetdiskDownload\\身份证\\caijian.jpg")); // 输出裁剪图片
 	}
+	
+	/**
+	 *  读取本地图片获取输入流
+	 * @param path 图片所在路径
+	 * @return
+	 * @throws IOException
+	 */
+    public static FileInputStream readImage(String path) throws IOException {
+        return new FileInputStream(new File(path));
+    }
+    
+    /**
+     *   读取表中图片获取输出流 
+     * @param in
+     * @param targetPath
+     */
+    public static void readBin2Image(InputStream in, String targetPath) {
+        File file = new File(targetPath);
+        String path = targetPath.substring(0, targetPath.lastIndexOf("/"));
+        if (!file.exists()) {
+            new File(path).mkdir();
+        }
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            int len = 0;
+            byte[] buf = new byte[1024];
+            while ((len = in.read(buf)) != -1) {
+                fos.write(buf, 0, len);
+            }
+            fos.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (null != fos) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 	/**
 	 * 缩放图片方法
@@ -56,6 +102,7 @@ public class ImgUtils {
 				return;
 			}
 			BufferedImage bi = ImageIO.read(f);
+			if(bi == null)return;
 			Image itemp = bi.getScaledInstance(width, height, Image.SCALE_SMOOTH);// bi.SCALE_SMOOTH
 																				// 选择图像平滑度比缩放速度具有更高优先级的图像缩放算法。
 			// 计算比例
